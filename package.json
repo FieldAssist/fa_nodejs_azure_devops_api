@@ -1,14 +1,17 @@
 {
   "name": "fa_vuejs_azure_api_dashboard",
   "version": "1.0.0",
-  "description": "",
+  "description": "Azure DevOps Rest APIs wrapper build on ExpressJs",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Ayush P Gupta",
+    "email": "ayushpguptaapg@gmail.com"
+  },
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
