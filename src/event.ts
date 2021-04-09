@@ -28,7 +28,8 @@ export async function runApp(orgUrl: string, token: string, iterationPaths: stri
     // @ts-ignore
     const backlogs = await getWorkItems(workItemTrackingApi, backlogIds);
 
-    let content = "# Sprint notes";
+    let contentList = [];
+    contentList.push("# 🔅 Sprint 000 (xy Apr - pqr Apr '21)");
 
     for (const backlog of backlogs) {
       // @ts-ignore
@@ -63,18 +64,39 @@ export async function runApp(orgUrl: string, token: string, iterationPaths: stri
           epicUrl = epic._links.html.href;
         }
       }
-      content = content.concat(`\n\n## ${ title }`);
 
-      content = content.concat(epicTitle ? `\n\n### Epic: [${ epicTitle }](${ epicUrl })` : '')
-        .concat(featureTitle ? `\n\n### Feature: [${ featureTitle }](${ featureUrl })` : '');
-      content = content.concat(description ? `\n\n**Description**: ${ description }` : '')
-        .concat(acceptance ? `\n\n**Acceptance Criteria**: ${ acceptance }` : '');
+      contentList.push(`## ${ title } ${id}`);
+      const epicList = [];
+      if (epicTitle)
+        epicList.push(`#### Epic: [${ epicTitle }](${ epicUrl })`)
+      if (featureTitle)
+        epicList.push(`#### Feature: [${ featureTitle }](${ featureUrl })`);
+      if (epicList.length > 0)
+        contentList.push(epicList.join('\n'))
 
-      content = content.concat(`\n\n### Related Links:`)
-        .concat(id ? `\nBacklog: [${ id }](${ url })  ` : '')
-        .concat(featureUrl ? `\nFeature: [${ featureId }](${ url })  ` : '')
-        .concat(epicId ? `\nEpic: [${ epicId }](${ epicUrl })  ` : '');
+      if (description) {
+        contentList.push(`### Description`)
+        contentList.push(`${ description }`)
+      }
+      if (acceptance) {
+        contentList.push(`### Acceptance Criteria`);
+        contentList.push(`${ acceptance }`);
+      }
+
+
+      contentList.push(`### Related Links:`)
+      const relatedList = [];
+      if (id)
+        relatedList.push(`**Backlog:** [${ id }](${ url })  `);
+      if (featureUrl)
+        relatedList.push(`**Feature:** [${ featureId }](${ url })  `);
+      if (epicId)
+        relatedList.push(`**Epic:** [${ epicId }](${ epicUrl })  `);
+      if (relatedList.length > 0) {
+        contentList.push(relatedList.join('\n'));
+      }
     }
+    const content = contentList.join('\n\n');
     console.log(content);
     return content;
   } catch (e) {
