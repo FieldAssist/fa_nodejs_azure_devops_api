@@ -2,16 +2,19 @@
   "name": "test-azure-devops-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
-    "azure-devops-node-api": "^10.2.1"
+    "azure-devops-node-api": "^10.2.1",
+    "express": "^4.17.1",
+    "marked": "^2.0.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.37",
