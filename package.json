@@ -1,5 +1,5 @@
 {
-  "name": "fa_vuejs_azure_api_dashboard",
+  "name": "fa_nodejs_azure_devops_api",
   "version": "1.0.0",
   "description": "Azure DevOps Rest APIs wrapper build on ExpressJs",
   "main": "dist/index.js",
