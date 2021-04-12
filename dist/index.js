@@ -115,5 +115,5 @@ app.get('/generator/epic', function (req, res) { return __awaiter(void 0, void 0
     });
 }); });
 app.listen(port, function () {
-    console.log("Example app listening at http://localhost:" + port);
+    console.log("App listening at http://localhost:" + port);
 });
