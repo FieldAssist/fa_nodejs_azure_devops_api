@@ -154,3 +154,4 @@ app.get('/clear', function (req, res) { return __awaiter(void 0, void 0, void 0,
 app.listen(port, function () {
     console.log("App listening at http://localhost:" + port);
 });
+//# sourceMappingURL=index.js.map
