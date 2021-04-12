@@ -125,7 +125,7 @@ app.get('/generator/epic', function (req, res) { return __awaiter(void 0, void 0
                 return [4 /*yield*/, git_1.handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg)];
             case 4:
                 _a.sent();
-                fs.rmdir("./fa_vuepress_product_docs", function () {
+                fs.rmdir("./fa_vuepress_product_docs", { recursive: true }, function () {
                     console.log("Folder Deleted!");
                 });
                 res.send('Successfully pushed changes.');
@@ -174,6 +174,19 @@ app.get('/test', function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
+    });
+}); });
+app.get('/clear', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        try {
+            fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
+            res.send('Cleared ./fa_vuepress_product_docs dir');
+        }
+        catch (e) {
+            console.error(e);
+            res.status(500).send(e === null || e === void 0 ? void 0 : e.toString());
+        }
+        return [2 /*return*/];
     });
 }); });
 app.listen(port, function () {

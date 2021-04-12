@@ -58,7 +58,7 @@ app.get('/generator/epic', async (req: any, res: any) => {
     const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${ epic.id }`;
     await handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg);
 
-    fs.rmdir("./fa_vuepress_product_docs", () => {
+    fs.rmdir("./fa_vuepress_product_docs", { recursive: true }, () => {
         console.log("Folder Deleted!");
       },
     );
@@ -92,6 +92,16 @@ app.get('/test', async (req: any, res: any) => {
     fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
 
     res.send('Successfully pushed changes.');
+  } catch (e) {
+    console.error(e);
+    res.status(500).send(e?.toString());
+  }
+})
+
+app.get('/clear', async (req: any, res: any) => {
+  try {
+    fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
+    res.send('Cleared ./fa_vuepress_product_docs dir');
   } catch (e) {
     console.error(e);
     res.status(500).send(e?.toString());
