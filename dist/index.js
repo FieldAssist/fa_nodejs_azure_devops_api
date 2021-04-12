@@ -38,6 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 var event_1 = require("./event");
+var git_1 = require("./git");
+var test_1 = require("./test");
 var express = require('express');
 var bodyParser = require('body-parser');
 var marked = require('marked');
@@ -70,6 +72,45 @@ app.get('/generate', function (req, res) { return __awaiter(void 0, void 0, void
                 res.status(500).send(e_1 === null || e_1 === void 0 ? void 0 : e_1.toString());
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
+        }
+    });
+}); });
+app.get('/generator/epic', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orgUrl, azToken, ghToken, epicId, workItemTrackingApi, epic, epicMarkdown, commitMsg, e_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                orgUrl = "https://dev.azure.com/flick2know";
+                azToken = req.query.azToken;
+                ghToken = req.query.ghToken;
+                epicId = req.query.epicId;
+                if (!ghToken || !epicId || !azToken) {
+                    res.status(400).send('ghToken, epicId, azToken cannot be null/empty!');
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, event_1.getWorkItemApi(orgUrl, azToken)];
+            case 1:
+                workItemTrackingApi = _a.sent();
+                return [4 /*yield*/, event_1.getWorkItem(workItemTrackingApi, parseInt(epicId))];
+            case 2:
+                epic = _a.sent();
+                return [4 /*yield*/, test_1.getEpicMarkdownBody(epic, orgUrl, azToken)];
+            case 3:
+                epicMarkdown = _a.sent();
+                console.log('Generated markdown content successfully!');
+                commitMsg = "Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic " + epic.id;
+                return [4 /*yield*/, git_1.handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg)];
+            case 4:
+                _a.sent();
+                res.send('Successfully pushed changes.');
+                return [3 /*break*/, 6];
+            case 5:
+                e_2 = _a.sent();
+                console.error(e_2);
+                res.status(500).send(e_2 === null || e_2 === void 0 ? void 0 : e_2.toString());
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); });

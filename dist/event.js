@@ -60,20 +60,55 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
     return to;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runApp = void 0;
+exports.getEpics = exports.runApp = exports.getWorkItem = exports.getWorkItems = exports.getWorkItemApi = void 0;
 var azdev = __importStar(require("azure-devops-node-api"));
 var WorkItemTrackingInterfaces_1 = require("azure-devops-node-api/interfaces/WorkItemTrackingInterfaces");
+function getWorkItemApi(orgUrl, token) {
+    return __awaiter(this, void 0, void 0, function () {
+        var authHandler, connection;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    authHandler = azdev.getPersonalAccessTokenHandler(token);
+                    connection = new azdev.WebApi(orgUrl, authHandler);
+                    return [4 /*yield*/, connection.getWorkItemTrackingApi()];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.getWorkItemApi = getWorkItemApi;
+function getWorkItems(workItemTrackingApi, ids) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, workItemTrackingApi.getWorkItems(__spreadArray([], ids), undefined, undefined, WorkItemTrackingInterfaces_1.WorkItemExpand.All)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.getWorkItems = getWorkItems;
+function getWorkItem(workItemTrackingApi, id) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, workItemTrackingApi.getWorkItem(id, undefined, undefined, WorkItemTrackingInterfaces_1.WorkItemExpand.All)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.getWorkItem = getWorkItem;
 function runApp(orgUrl, token, iterationPaths) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function () {
-        var authHandler, connection, workItemTrackingApi, query, backlogRefList, backlogIds, backlogs, content, _i, backlogs_1, backlog, title, description, acceptance, id, url, featureTitle, featureUrl, epicTitle, epicId, epicUrl, featureId, feature, epic, e_1;
+        var workItemTrackingApi, query, backlogRefList, backlogIds, backlogs, contentList, _i, backlogs_1, backlog, title, description, acceptance, id, url, featureTitle, featureUrl, epicTitle, epicId, epicUrl, featureId, feature, epic, epicList, relatedList, content, e_1;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
                     _c.trys.push([0, 10, , 11]);
-                    authHandler = azdev.getPersonalAccessTokenHandler(token);
-                    connection = new azdev.WebApi(orgUrl, authHandler);
-                    return [4 /*yield*/, connection.getWorkItemTrackingApi()];
+                    return [4 /*yield*/, getWorkItemApi(orgUrl, token)];
                 case 1:
                     workItemTrackingApi = _c.sent();
                     query = "Select [System.Id], [System.Title], [System.State], [System.Description] From WorkItems Where [System.WorkItemType] = 'Product Backlog Item' AND [State] = 'Done' AND [System.IterationPath] in ('" + iterationPaths.join("','") + "') order by [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc";
@@ -81,10 +116,11 @@ function runApp(orgUrl, token, iterationPaths) {
                 case 2:
                     backlogRefList = _c.sent();
                     backlogIds = (_b = (_a = backlogRefList === null || backlogRefList === void 0 ? void 0 : backlogRefList.workItems) === null || _a === void 0 ? void 0 : _a.map(function (value) { return value.id; })) !== null && _b !== void 0 ? _b : [];
-                    return [4 /*yield*/, workItemTrackingApi.getWorkItems(__spreadArray([], backlogIds), undefined, undefined, WorkItemTrackingInterfaces_1.WorkItemExpand.All)];
+                    return [4 /*yield*/, getWorkItems(workItemTrackingApi, backlogIds)];
                 case 3:
                     backlogs = _c.sent();
-                    content = "# Sprint notes";
+                    contentList = [];
+                    contentList.push("# 🔅 Sprint 000 (xy Apr - pqr Apr '21)");
                     _i = 0, backlogs_1 = backlogs;
                     _c.label = 4;
                 case 4:
@@ -119,20 +155,39 @@ function runApp(orgUrl, token, iterationPaths) {
                     epicUrl = epic._links.html.href;
                     _c.label = 7;
                 case 7:
-                    content = content.concat("\n\n## " + title);
-                    content = content.concat(epicTitle ? "\n\n### Epic: [" + epicTitle + "](" + epicUrl + ")" : '')
-                        .concat(featureTitle ? "\n\n### Feature: [" + featureTitle + "](" + featureUrl + ")" : '');
-                    content = content.concat(description ? "\n\n**Description**: " + description : '')
-                        .concat(acceptance ? "\n\n**Acceptance Criteria**: " + acceptance : '');
-                    content = content.concat("\n\n### Related Links:")
-                        .concat(id ? "\nBacklog: [" + id + "](" + url + ")  " : '')
-                        .concat(featureUrl ? "\nFeature: [" + featureId + "](" + url + ")  " : '')
-                        .concat(epicId ? "\nEpic: [" + epicId + "](" + epicUrl + ")  " : '');
+                    contentList.push("## " + title + " " + id);
+                    epicList = [];
+                    if (epicTitle)
+                        epicList.push("#### Epic: [" + epicTitle + "](" + epicUrl + ")");
+                    if (featureTitle)
+                        epicList.push("#### Feature: [" + featureTitle + "](" + featureUrl + ")");
+                    if (epicList.length > 0)
+                        contentList.push(epicList.join('\n'));
+                    if (description) {
+                        contentList.push("### Description");
+                        contentList.push("" + description);
+                    }
+                    if (acceptance) {
+                        contentList.push("### Acceptance Criteria");
+                        contentList.push("" + acceptance);
+                    }
+                    contentList.push("### Related Links:");
+                    relatedList = [];
+                    if (id)
+                        relatedList.push("**Backlog:** [" + id + "](" + url + ")  ");
+                    if (featureUrl)
+                        relatedList.push("**Feature:** [" + featureId + "](" + url + ")  ");
+                    if (epicId)
+                        relatedList.push("**Epic:** [" + epicId + "](" + epicUrl + ")  ");
+                    if (relatedList.length > 0) {
+                        contentList.push(relatedList.join('\n'));
+                    }
                     _c.label = 8;
                 case 8:
                     _i++;
                     return [3 /*break*/, 4];
                 case 9:
+                    content = contentList.join('\n\n');
                     console.log(content);
                     return [2 /*return*/, content];
                 case 10:
@@ -145,3 +200,33 @@ function runApp(orgUrl, token, iterationPaths) {
     });
 }
 exports.runApp = runApp;
+function getEpics(orgUrl, token) {
+    var _a, _b;
+    return __awaiter(this, void 0, void 0, function () {
+        var workItemTrackingApi, query, backlogRefList, backlogIds, e_2;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 4, , 5]);
+                    return [4 /*yield*/, getWorkItemApi(orgUrl, token)];
+                case 1:
+                    workItemTrackingApi = _c.sent();
+                    query = "Select [System.Id], [System.Title], [System.State], [System.Description] From WorkItems Where [System.WorkItemType] = 'Epic' AND [System.TeamProject] = 'Field_Assist' order by [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc";
+                    return [4 /*yield*/, workItemTrackingApi.queryByWiql({ query: query })];
+                case 2:
+                    backlogRefList = _c.sent();
+                    backlogIds = (_b = (_a = backlogRefList === null || backlogRefList === void 0 ? void 0 : backlogRefList.workItems) === null || _a === void 0 ? void 0 : _a.map(function (value) { return value.id; })) !== null && _b !== void 0 ? _b : [];
+                    return [4 /*yield*/, getWorkItems(workItemTrackingApi, backlogIds)];
+                case 3: 
+                // @ts-ignore
+                return [2 /*return*/, _c.sent()];
+                case 4:
+                    e_2 = _c.sent();
+                    console.error(e_2);
+                    throw e_2;
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getEpics = getEpics;
