@@ -40,7 +40,7 @@ app.get('/generator/epic', async (req: any, res: any) => {
     const ghToken = req.query.ghToken;
     const epicId = req.query.epicId;
 
-    if (!ghToken || !epicId ||!azToken) {
+    if (!ghToken || !epicId || !azToken) {
       res.status(400).send('ghToken, epicId, azToken cannot be null/empty!');
       return;
     }
@@ -50,7 +50,8 @@ app.get('/generator/epic', async (req: any, res: any) => {
     const epicMarkdown = await getEpicMarkdownBody(epic, orgUrl, azToken);
     console.log('Generated markdown content successfully!');
 
-    await handleGit(ghToken, epicMarkdown.title, epicMarkdown.content);
+    const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${ epic.id }`;
+    await handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg);
     res.send('Successfully pushed changes.');
   } catch (e) {
     console.error(e);

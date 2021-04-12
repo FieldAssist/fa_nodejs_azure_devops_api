@@ -9,8 +9,9 @@ import { kebabCase } from "./utils/utils";
  * @param {string} ghToken The Github PAT
  * @param {string} title The title of epic
  * @param {string} content The markdown content of the epic
+ * @param {string} commitMsg The commit message
  */
-export async function handleGit(ghToken: string, title: string, content: string) {
+export async function handleGit(ghToken: string, title: string, content: string, commitMsg: string) {
   try {
     const url = "https://github.com/FieldAssist/fa_vuepress_product_docs.git";
     const localPath = "./fa_vuepress_product_docs";
@@ -50,7 +51,7 @@ export async function handleGit(ghToken: string, title: string, content: string)
 
     const parent = await repo.getHeadCommit();
 
-    const commitId = await repo.createCommit("HEAD", author, committer, 'Update from https://github.com/FieldAssist/fa_vuejs_azure_api_dashboard.git', oid, [parent]);
+    const commitId = await repo.createCommit("HEAD", author, committer, commitMsg ?? 'Update from FieldAssist/fa_vuejs_azure_api_dashboard', oid, [parent]);
 
     console.log(`Committed: ${ commitId }`);
 

@@ -5,7 +5,7 @@ import { WorkItem } from "azure-devops-node-api/interfaces/WorkItemTrackingInter
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { kebabCase } from "./utils/utils";
 
-const delayTimeInMs = 1000;
+const delayTimeInMs = 300;
 
 export function getWorkItemDetail(item: WorkItem): WorkItemDetail {
   // @ts-ignore
