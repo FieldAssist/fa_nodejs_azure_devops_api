@@ -121,11 +121,12 @@ app.get('/generator/epic', function (req, res) { return __awaiter(void 0, void 0
             case 3:
                 epicMarkdown = _a.sent();
                 console.log('Generated markdown content successfully!');
-                fs.rmdirSync("./fa_vuejs_azure_api_dashboard", { recursive: true });
+                fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
                 commitMsg = "Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic " + epic.id;
                 return [4 /*yield*/, git_1.handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg)];
             case 4:
                 _a.sent();
+                fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
                 res.send('Successfully pushed changes.');
                 return [3 /*break*/, 6];
             case 5:

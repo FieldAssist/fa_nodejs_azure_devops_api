@@ -69,6 +69,34 @@ app.get('/generator/epic', async (req: any, res: any) => {
   }
 })
 
+app.get('/test', async (req: any, res: any) => {
+  try {
+    const orgUrl = "https://dev.azure.com/flick2know";
+    const azToken = req.query.azToken;
+    const ghToken = req.query.ghToken;
+    const epicId = req.query.epicId;
+
+    if (!ghToken || !epicId || !azToken) {
+      res.status(400).send('ghToken, epicId, azToken cannot be null/empty!');
+      return;
+    }
+    let workItemTrackingApi = await getWorkItemApi(orgUrl, azToken);
+
+    const epic = await getWorkItem(workItemTrackingApi, parseInt(epicId));
+    const epicMarkdown = await getEpicMarkdownBody(epic, orgUrl, azToken);
+    console.log('Generated markdown content successfully!');
+
+    //const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${ epic.id }`;
+
+    fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
+
+    res.send('Successfully pushed changes.');
+  } catch (e) {
+    console.error(e);
+    res.status(500).send(e?.toString());
+  }
+})
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${ port }`)
 })
