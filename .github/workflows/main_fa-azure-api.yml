@@ -34,5 +34,5 @@ jobs:
         app-name: fa-azure-api
         slot-name: Production
         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5B749489059944C29CBEB5EE8DEFE4D2 }}
-        package: .
+        startup-command: 'npm run serve'
 
