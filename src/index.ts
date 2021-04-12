@@ -6,10 +6,12 @@ import * as fs from "fs";
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const marked = require('marked');
 const app = express();
 const port = process.env.PORT ?? 3000;
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -53,7 +55,7 @@ app.get('/generator/epic', async (req: any, res: any) => {
     const epicMarkdown = await getEpicMarkdownBody(epic, orgUrl, azToken);
     console.log('Generated markdown content successfully!');
 
-    fs.rmdirSync("./fa_vuejs_azure_api_dashboard",{ recursive: true });
+    fs.rmdirSync("./fa_vuejs_azure_api_dashboard", { recursive: true });
 
     const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${ epic.id }`;
     await handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg);

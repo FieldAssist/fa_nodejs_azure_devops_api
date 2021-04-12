@@ -62,9 +62,11 @@ var test_1 = require("./test");
 var fs = __importStar(require("fs"));
 var express = require('express');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 var marked = require('marked');
 var app = express();
 var port = (_a = process.env.PORT) !== null && _a !== void 0 ? _a : 3000;
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.get('/generate', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
