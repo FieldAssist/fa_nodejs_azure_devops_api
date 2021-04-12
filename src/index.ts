@@ -1,4 +1,6 @@
-import { runApp } from "./event";
+import { getWorkItem, getWorkItemApi, runApp } from "./event";
+import { handleGit } from "./git";
+import { getEpicMarkdownBody } from "./test";
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -25,6 +27,31 @@ app.get('/generate', async (req: any, res: any) => {
     const content = await runApp(orgUrl, token, iterationPaths);
 
     res.send(content);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send(e?.toString());
+  }
+})
+
+app.get('/generator/epic', async (req: any, res: any) => {
+  try {
+    const orgUrl = "https://dev.azure.com/flick2know";
+    const azToken = req.query.azToken;
+    const ghToken = req.query.ghToken;
+    const epicId = req.query.epicId;
+
+    if (!ghToken || !epicId ||!azToken) {
+      res.status(400).send('ghToken, epicId, azToken cannot be null/empty!');
+      return;
+    }
+    let workItemTrackingApi = await getWorkItemApi(orgUrl, azToken);
+
+    const epic = await getWorkItem(workItemTrackingApi, parseInt(epicId));
+    const epicMarkdown = await getEpicMarkdownBody(epic, orgUrl, azToken);
+    console.log('Generated markdown content successfully!');
+
+    await handleGit(ghToken, epicMarkdown.title, epicMarkdown.content);
+    res.send('Successfully pushed changes.');
   } catch (e) {
     console.error(e);
     res.status(500).send(e?.toString());

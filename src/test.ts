@@ -3,8 +3,7 @@ import { getEpics, getWorkItem, getWorkItemApi } from "./event";
 import * as fs from 'fs';
 import { WorkItem } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
-
-const kebabCase = (string: string) => string.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/\s+/g, '-').toLowerCase()
+import { kebabCase } from "./utils/utils";
 
 const delayTimeInMs = 1000;
 
@@ -99,41 +98,45 @@ async function getBacklogContent(id: number, workItemTrackingApi: WorkItemTracki
   return contentList.join('\n\n');
 }
 
+export async function getEpicMarkdownBody(epic: WorkItem, orgUrl: string, token: string): Promise<Epic> {
+  console.log(`Generating Epic: ${ epic.id }`);
+  const contentList: string[] = [];
+
+  const epicDetail = getWorkItemDetail(epic);
+  const epicContent = getEpicContent(epicDetail);
+  contentList.push(epicContent);
+
+  const relations = (epic.relations ?? []).filter(value => value.rel === "System.LinkTypes.Hierarchy-Forward");
+
+  for (const featureRef of relations ?? []) {
+    const featureId: string = featureRef.url?.split('/').reverse()[0] ?? "-1";
+    await delay(delayTimeInMs);
+    const workItemTrackingApi = await getWorkItemApi(orgUrl, token)
+    const featureContent = await getFeatureContent(parseInt(featureId), workItemTrackingApi);
+    contentList.push(featureContent);
+  }
+
+  const content = contentList.join("\n\n");
+  return {
+    title: epicDetail.title,
+    content: content,
+  };
+}
+
 export async function runApp2() {
   try {
     let token = "---";
     let orgUrl = `https://dev.azure.com/flick2know`;
 
-    const epics = await getEpics(orgUrl, token);
+    const epics = (await getEpics(orgUrl, token)).filter(value => value.id == 1112);
     for (const epic of epics) {
-      console.log(`Generating Epic: ${ epic.id }`);
-      const contentList: string[] = [];
-
-      const epicDetail = getWorkItemDetail(epic);
-      const epicContent = getEpicContent(epicDetail);
-      contentList.push(epicContent);
-
-      const relations = (epic.relations ?? []).filter(value => value.rel === "System.LinkTypes.Hierarchy-Forward");
-
-      for (const featureRef of relations ?? []) {
-        const featureId: string = featureRef.url?.split('/').reverse()[0] ?? "-1";
-        await delay(delayTimeInMs);
-        const workItemTrackingApi = await getWorkItemApi(orgUrl, token)
-        const featureContent = await getFeatureContent(parseInt(featureId), workItemTrackingApi);
-        contentList.push(featureContent);
-      }
-
-      const content = contentList.join("\n\n");
-      await fs.promises.writeFile(`../fa_vuepress_product_docs/docs/src/guide/epics/${ kebabCase(epicDetail.title) }.md`, content);
+      const epicDetail = await getEpicMarkdownBody(epic, orgUrl, token);
+      await fs.promises.writeFile(`../fa_vuepress_product_docs/docs/src/guide/epics/${ kebabCase(epicDetail.title) }.md`, epicDetail.content);
     }
   } catch (e) {
     console.error(e);
   }
 }
-
-
-runApp2();
-
 
 export interface WorkItemDetail {
   title: string,
@@ -141,6 +144,11 @@ export interface WorkItemDetail {
   id: number,
   acceptance: string,
   url: string,
+}
+
+export interface Epic {
+  title: string,
+  content: string
 }
 
 function delay(delayInms: number) {
