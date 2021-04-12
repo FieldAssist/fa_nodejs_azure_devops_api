@@ -64,6 +64,7 @@ export async function handleGit(ghToken: string, title: string, content: string,
       }
     );
     console.log('Pushed changes successfully!');
+    repo.cleanup();
   } catch (e) {
     console.error(e);
     throw e;
