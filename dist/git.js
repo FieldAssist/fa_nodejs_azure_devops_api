@@ -115,6 +115,7 @@ function handleGit(ghToken, title, content, commitMsg) {
                 case 10:
                     _a.sent();
                     console.log('Pushed changes successfully!');
+                    repo.cleanup();
                     return [3 /*break*/, 12];
                 case 11:
                     e_1 = _a.sent();
