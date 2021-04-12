@@ -59,6 +59,11 @@ Backlog: [40115](https://dev.azure.com/flick2know/03de2bf5-6b21-4d0c-ae7c-1660f7
 Feature: [37218](https://dev.azure.com/flick2know/03de2bf5-6b21-4d0c-ae7c-1660f71cc8a6/_workitems/edit/40115)  
 Epic: [36115](https://dev.azure.com/flick2know/03de2bf5-6b21-4d0c-ae7c-1660f71cc8a6/_workitems/edit/36115)  
 ```
+## Extras
+
+For VS Code debugging
+
+https://pkief.medium.com/how-to-debug-typescript-with-vs-code-9cec93b4ae56
 
 ## 👍 Contribution
 
