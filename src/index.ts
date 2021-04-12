@@ -55,10 +55,13 @@ app.get('/generator/epic', async (req: any, res: any) => {
     const epicMarkdown = await getEpicMarkdownBody(epic, orgUrl, azToken);
     console.log('Generated markdown content successfully!');
 
-    fs.rmdirSync("./fa_vuejs_azure_api_dashboard", { recursive: true });
+    fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
 
     const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${ epic.id }`;
     await handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg);
+
+    fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
+
     res.send('Successfully pushed changes.');
   } catch (e) {
     console.error(e);
