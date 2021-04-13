@@ -20,14 +20,15 @@ app.get('/generate', async (req: any, res: any) => {
   try {
     let org = req.query.org;
     let token = req.query.token;
-    let iterationPaths: string[] = JSON.parse(req.query.iterationPaths);
 
-    if (!org || !token || !iterationPaths) {
+    if (!org || !token || !req.query.iterationPaths) {
       res.status(400).send('org, token, iterationPaths cannot be null/empty!');
       return;
     }
 
-    let orgUrl = `https://dev.azure.com/${ org }`;
+    let iterationPaths: string[] = JSON.parse(req.query.iterationPaths);
+
+    let orgUrl = `https://dev.azure.com/${org}`;
     const content = await runApp(orgUrl, token, iterationPaths);
 
     res.send(content);
@@ -57,7 +58,7 @@ app.get('/generator/epic', async (req: any, res: any) => {
 
     fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
 
-    const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${ epic.id }`;
+    const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${epic.id}`;
     await handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg);
 
     fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
@@ -80,5 +81,5 @@ app.get('/clear', async (req: any, res: any) => {
 })
 
 app.listen(port, () => {
-  console.log(`App listening at http://localhost:${ port }`)
+  console.log(`App listening at http://localhost:${port}`)
 })

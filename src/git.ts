@@ -32,7 +32,7 @@ export async function handleGit(ghToken: string, title: string, content: string,
       checkoutBranch: 'main',
     });
 
-    const mdPath = `${ localPath }/docs/src/guide/epics/${ kebabCase(title) }.md`;
+    const mdPath = `${localPath}/docs/src/guide/epics/${kebabCase(title)}.md`;
 
     await fs.promises.writeFile(mdPath, content);
 
@@ -53,7 +53,7 @@ export async function handleGit(ghToken: string, title: string, content: string,
 
     const commitId = await repo.createCommit("HEAD", author, committer, commitMsg ?? 'Update from FieldAssist/fa_vuejs_azure_api_dashboard', oid, [parent]);
 
-    console.log(`Committed: ${ commitId }`);
+    console.log(`Committed: ${commitId}`);
 
     //const remote = await Remote.create(repo, "origin", `git@github.com:FieldAssist/fa_vuepress_product_docs.git`);
     const remote = await repo.getRemote('origin');
