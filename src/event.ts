@@ -65,14 +65,16 @@ export async function runApp(orgUrl: string, token: string, iterationPaths: stri
         }
       }
 
-      contentList.push(`## ${ title } ${id}`);
-      const epicList = [];
+      contentList.push(`## 📝 ${ title } ${id}`);
+      const linkList = [];
+      if (id)
+        linkList.push(`#### Backlog: [${ id }](${ url })  `);
       if (epicTitle)
-        epicList.push(`#### Epic: [${ epicTitle }](${ epicUrl })`)
+        linkList.push(`#### Epic: [${ epicTitle } ${epicId}](${ epicUrl })`)
       if (featureTitle)
-        epicList.push(`#### Feature: [${ featureTitle }](${ featureUrl })`);
-      if (epicList.length > 0)
-        contentList.push(epicList.join('\n'))
+        linkList.push(`#### Feature: [${ featureTitle } ${featureId}](${ featureUrl })`);
+      if (linkList.length > 0)
+        contentList.push(linkList.join('\n'))
 
       if (description) {
         contentList.push(`### Description`)
@@ -81,19 +83,6 @@ export async function runApp(orgUrl: string, token: string, iterationPaths: stri
       if (acceptance) {
         contentList.push(`### Acceptance Criteria`);
         contentList.push(`${ acceptance }`);
-      }
-
-
-      contentList.push(`### Related Links:`)
-      const relatedList = [];
-      if (id)
-        relatedList.push(`**Backlog:** [${ id }](${ url })  `);
-      if (featureUrl)
-        relatedList.push(`**Feature:** [${ featureId }](${ url })  `);
-      if (epicId)
-        relatedList.push(`**Epic:** [${ epicId }](${ epicUrl })  `);
-      if (relatedList.length > 0) {
-        contentList.push(relatedList.join('\n'));
       }
     }
     const content = contentList.join('\n\n');
