@@ -103,7 +103,7 @@ exports.getWorkItem = getWorkItem;
 function runApp(orgUrl, token, iterationPaths) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function () {
-        var workItemTrackingApi, query, backlogRefList, backlogIds, backlogs, contentList, _i, backlogs_1, backlog, title, description, acceptance, id, url, featureTitle, featureUrl, epicTitle, epicId, epicUrl, featureId, feature, epic, epicList, relatedList, content, e_1;
+        var workItemTrackingApi, query, backlogRefList, backlogIds, backlogs, contentList, _i, backlogs_1, backlog, title, description, acceptance, id, url, featureTitle, featureUrl, epicTitle, epicId, epicUrl, featureId, feature, epic, linkList, content, e_1;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -155,14 +155,16 @@ function runApp(orgUrl, token, iterationPaths) {
                     epicUrl = epic._links.html.href;
                     _c.label = 7;
                 case 7:
-                    contentList.push("## " + title + " " + id);
-                    epicList = [];
+                    contentList.push("## \uD83D\uDCDD " + title + " " + id);
+                    linkList = [];
+                    if (id)
+                        linkList.push("#### Backlog: [" + id + "](" + url + ")  ");
                     if (epicTitle)
-                        epicList.push("#### Epic: [" + epicTitle + "](" + epicUrl + ")");
+                        linkList.push("#### Epic: [" + epicTitle + " " + epicId + "](" + epicUrl + ")");
                     if (featureTitle)
-                        epicList.push("#### Feature: [" + featureTitle + "](" + featureUrl + ")");
-                    if (epicList.length > 0)
-                        contentList.push(epicList.join('\n'));
+                        linkList.push("#### Feature: [" + featureTitle + " " + featureId + "](" + featureUrl + ")");
+                    if (linkList.length > 0)
+                        contentList.push(linkList.join('\n'));
                     if (description) {
                         contentList.push("### Description");
                         contentList.push("" + description);
@@ -170,17 +172,6 @@ function runApp(orgUrl, token, iterationPaths) {
                     if (acceptance) {
                         contentList.push("### Acceptance Criteria");
                         contentList.push("" + acceptance);
-                    }
-                    contentList.push("### Related Links:");
-                    relatedList = [];
-                    if (id)
-                        relatedList.push("**Backlog:** [" + id + "](" + url + ")  ");
-                    if (featureUrl)
-                        relatedList.push("**Feature:** [" + featureId + "](" + url + ")  ");
-                    if (epicId)
-                        relatedList.push("**Epic:** [" + epicId + "](" + epicUrl + ")  ");
-                    if (relatedList.length > 0) {
-                        contentList.push(relatedList.join('\n'));
                     }
                     _c.label = 8;
                 case 8:

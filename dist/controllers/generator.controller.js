@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -57,31 +38,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-var event_1 = require("./event");
-var fs = __importStar(require("fs"));
-var express_1 = __importDefault(require("express"));
-var body_parser_1 = __importDefault(require("body-parser"));
-var cors_1 = __importDefault(require("cors"));
-var v1_router_1 = require("./v1.router");
-var helmet_1 = __importDefault(require("helmet"));
-var appError_1 = require("./utils/appError");
-var error_controller_1 = require("./controllers/error.controller");
-var app = express_1.default();
-var port = (_a = process.env.PORT) !== null && _a !== void 0 ? _a : 3000;
-// Allow Cross-Origin requests
-app.use(cors_1.default());
-// Set security HTTP headers
-app.use(helmet_1.default());
-app.use(body_parser_1.default.urlencoded({ extended: false }));
-app.use(body_parser_1.default.json());
-app.use('/v1', v1_router_1.v1router);
-app.use('/', v1_router_1.v1router);
-/**
- * @deprecated Use generator route
- */
-app.get('/generate', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+exports.epic = exports.sprint = void 0;
+var event_1 = require("../event");
+var test_1 = require("../test");
+var fs_1 = __importDefault(require("fs"));
+var git_1 = require("../git");
+var sprint = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var org, token, iterationPaths, orgUrl, content, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -108,30 +71,48 @@ app.get('/generate', function (req, res) { return __awaiter(void 0, void 0, void
             case 3: return [2 /*return*/];
         }
     });
-}); });
-/**
- * @deprecated Use generator route
- */
-app.get('/clear', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+}); };
+exports.sprint = sprint;
+var epic = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orgUrl, azToken, ghToken, epicId, workItemTrackingApi, epic_1, epicMarkdown, commitMsg, e_2;
     return __generator(this, function (_a) {
-        try {
-            fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
-            res.send('Cleared ./fa_vuepress_product_docs dir');
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                orgUrl = "https://dev.azure.com/flick2know";
+                azToken = req.query.azToken;
+                ghToken = req.query.ghToken;
+                epicId = req.query.epicId;
+                if (!ghToken || !epicId || !azToken) {
+                    res.status(400).send('ghToken, epicId, azToken cannot be null/empty!');
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, event_1.getWorkItemApi(orgUrl, azToken)];
+            case 1:
+                workItemTrackingApi = _a.sent();
+                return [4 /*yield*/, event_1.getWorkItem(workItemTrackingApi, parseInt(epicId))];
+            case 2:
+                epic_1 = _a.sent();
+                return [4 /*yield*/, test_1.getEpicMarkdownBody(epic_1, orgUrl, azToken)];
+            case 3:
+                epicMarkdown = _a.sent();
+                console.log('Generated markdown content successfully!');
+                fs_1.default.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
+                commitMsg = "Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic " + epic_1.id;
+                return [4 /*yield*/, git_1.handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg)];
+            case 4:
+                _a.sent();
+                fs_1.default.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
+                res.send('Successfully pushed changes.');
+                return [3 /*break*/, 6];
+            case 5:
+                e_2 = _a.sent();
+                console.error(e_2);
+                res.status(500).send(e_2 === null || e_2 === void 0 ? void 0 : e_2.toString());
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
-        catch (e) {
-            console.error(e);
-            res.status(500).send(e === null || e === void 0 ? void 0 : e.toString());
-        }
-        return [2 /*return*/];
     });
-}); });
-// handle undefined Routes
-app.use('*', function (req, res, next) {
-    var err = new appError_1.AppError(404, 'Not found', 'undefined route');
-    res.status(404).send(err);
-});
-app.use(error_controller_1.globalError);
-app.listen(port, function () {
-    console.log("App listening at http://localhost:" + port);
-});
-//# sourceMappingURL=index.js.map
+}); };
+exports.epic = epic;
+//# sourceMappingURL=generator.controller.js.map
