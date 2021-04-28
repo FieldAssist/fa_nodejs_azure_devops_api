@@ -119,8 +119,10 @@ function genSprintNotes(orgUrl, token, iterationPaths) {
                     return [4 /*yield*/, getWorkItems(workItemTrackingApi, backlogIds)];
                 case 3:
                     backlogs = _c.sent();
+                    // @ts-ignore
+                    backlogs = backlogs.sort(function (a, b) { var _a, _b; return ((_a = a.fields['System.Parent']) !== null && _a !== void 0 ? _a : 0) - ((_b = b.fields['System.Parent']) !== null && _b !== void 0 ? _b : 0); });
                     contentList = [];
-                    contentList.push("# 🔅 Sprint 000 (xy Apr - pqr Apr '21)");
+                    contentList.push("# 🔅 Sprint 000 (xy Apr - pq Apr '21)");
                     _i = 0, backlogs_1 = backlogs;
                     _c.label = 4;
                 case 4:

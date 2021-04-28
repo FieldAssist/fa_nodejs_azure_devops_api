@@ -26,10 +26,13 @@ export async function genSprintNotes(orgUrl: string, token: string, iterationPat
     const backlogIds = backlogRefList?.workItems?.map(value => value.id) ?? [];
 
     // @ts-ignore
-    const backlogs = await getWorkItems(workItemTrackingApi, backlogIds);
+    let backlogs = await getWorkItems(workItemTrackingApi, backlogIds);
+
+    // @ts-ignore
+    backlogs = backlogs.sort((a, b) => (a.fields['System.Parent'] ?? 0) - (b.fields['System.Parent'] ?? 0));
 
     let contentList = [];
-    contentList.push("# 🔅 Sprint 000 (xy Apr - pqr Apr '21)");
+    contentList.push("# 🔅 Sprint 000 (xy Apr - pq Apr '21)");
 
     for (const backlog of backlogs) {
       // @ts-ignore
@@ -65,14 +68,14 @@ export async function genSprintNotes(orgUrl: string, token: string, iterationPat
         }
       }
 
-      contentList.push(`## 📝 ${ title } ${id}`);
+      contentList.push(`## 📝 ${ title } ${ id }`);
       const linkList = [];
       if (id)
         linkList.push(`#### Backlog: [${ id }](${ url })  `);
       if (epicTitle)
-        linkList.push(`#### Epic: [${ epicTitle } ${epicId}](${ epicUrl })`)
+        linkList.push(`#### Epic: [${ epicTitle } ${ epicId }](${ epicUrl })`)
       if (featureTitle)
-        linkList.push(`#### Feature: [${ featureTitle } ${featureId}](${ featureUrl })`);
+        linkList.push(`#### Feature: [${ featureTitle } ${ featureId }](${ featureUrl })`);
       if (linkList.length > 0)
         contentList.push(linkList.join('\n'))
 
