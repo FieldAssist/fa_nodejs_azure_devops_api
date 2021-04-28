@@ -1,4 +1,4 @@
-import { getWorkItem, getWorkItemApi, runApp } from "../event";
+import { getWorkItem, getWorkItemApi, genSprintNotes } from "../event";
 import { getEpicMarkdownBody } from "../test";
 import fs from "fs";
 import { handleGit } from "../git";
@@ -16,7 +16,7 @@ export const sprint = async (req: any, res: any) => {
     let iterationPaths: string[] = JSON.parse(req.query.iterationPaths);
 
     let orgUrl = `https://dev.azure.com/${ org }`;
-    const content = await runApp(orgUrl, token, iterationPaths);
+    const content = await genSprintNotes(orgUrl, token, iterationPaths);
 
     res.send(content);
   } catch (e) {

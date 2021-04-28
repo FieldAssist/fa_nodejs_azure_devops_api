@@ -60,7 +60,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
     return to;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEpics = exports.runApp = exports.getWorkItem = exports.getWorkItems = exports.getWorkItemApi = void 0;
+exports.getEpics = exports.genSprintNotes = exports.getWorkItem = exports.getWorkItems = exports.getWorkItemApi = void 0;
 var azdev = __importStar(require("azure-devops-node-api"));
 var WorkItemTrackingInterfaces_1 = require("azure-devops-node-api/interfaces/WorkItemTrackingInterfaces");
 function getWorkItemApi(orgUrl, token) {
@@ -100,7 +100,7 @@ function getWorkItem(workItemTrackingApi, id) {
     });
 }
 exports.getWorkItem = getWorkItem;
-function runApp(orgUrl, token, iterationPaths) {
+function genSprintNotes(orgUrl, token, iterationPaths) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function () {
         var workItemTrackingApi, query, backlogRefList, backlogIds, backlogs, contentList, _i, backlogs_1, backlog, title, description, acceptance, id, url, featureTitle, featureUrl, epicTitle, epicId, epicUrl, featureId, feature, epic, linkList, content, e_1;
@@ -111,7 +111,7 @@ function runApp(orgUrl, token, iterationPaths) {
                     return [4 /*yield*/, getWorkItemApi(orgUrl, token)];
                 case 1:
                     workItemTrackingApi = _c.sent();
-                    query = "Select [System.Id], [System.Title], [System.State], [System.Description] From WorkItems Where [System.WorkItemType] = 'Product Backlog Item' AND [State] = 'Done' AND [System.IterationPath] in ('" + iterationPaths.join("','") + "') order by [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc";
+                    query = "SELECT [System.Id], [System.Title], [System.State], [System.Description] FROM WorkItems WHERE [System.WorkItemType] = 'Product Backlog Item' AND [State] IN ('Committed','Testing','Ready for Demo','UAT','Done') AND [System.IterationPath] IN ('" + iterationPaths.join("','") + "') ORDER BY [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc";
                     return [4 /*yield*/, workItemTrackingApi.queryByWiql({ query: query })];
                 case 2:
                     backlogRefList = _c.sent();
@@ -190,7 +190,7 @@ function runApp(orgUrl, token, iterationPaths) {
         });
     });
 }
-exports.runApp = runApp;
+exports.genSprintNotes = genSprintNotes;
 function getEpics(orgUrl, token) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function () {
