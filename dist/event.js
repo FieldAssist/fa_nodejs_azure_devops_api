@@ -100,7 +100,7 @@ function getWorkItem(workItemTrackingApi, id) {
     });
 }
 exports.getWorkItem = getWorkItem;
-function genSprintNotes(orgUrl, token, iterationPaths) {
+function genSprintNotes(orgUrl, token, iterationPaths, sprintName) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function () {
         var workItemTrackingApi, query, backlogRefList, backlogIds, backlogs, contentList, _i, backlogs_1, backlog, title, description, acceptance, id, url, featureTitle, featureUrl, epicTitle, epicId, epicUrl, featureId, feature, epic, linkList, content, e_1;
@@ -122,7 +122,7 @@ function genSprintNotes(orgUrl, token, iterationPaths) {
                     // @ts-ignore
                     backlogs = backlogs.sort(function (a, b) { var _a, _b; return ((_a = a.fields['System.Parent']) !== null && _a !== void 0 ? _a : 0) - ((_b = b.fields['System.Parent']) !== null && _b !== void 0 ? _b : 0); });
                     contentList = [];
-                    contentList.push("# 🔅 Sprint 000 (xy Apr - pq Apr '21)");
+                    contentList.push("# \uD83D\uDD05 " + (sprintName !== null && sprintName !== void 0 ? sprintName : 'Sprint 000') + " (xy Apr - pq Apr '21)");
                     _i = 0, backlogs_1 = backlogs;
                     _c.label = 4;
                 case 4:
@@ -168,11 +168,11 @@ function genSprintNotes(orgUrl, token, iterationPaths) {
                     if (linkList.length > 0)
                         contentList.push(linkList.join('\n'));
                     if (description) {
-                        contentList.push("### Description");
+                        contentList.push("#### Description");
                         contentList.push("" + description);
                     }
                     if (acceptance) {
-                        contentList.push("### Acceptance Criteria");
+                        contentList.push("#### Acceptance Criteria");
                         contentList.push("" + acceptance);
                     }
                     _c.label = 8;

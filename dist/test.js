@@ -223,7 +223,7 @@ function runApp2() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 7, , 8]);
-                    token = "j3x53hmkkwah4w6fyjwjsz6ytn6ensjaekbuq2ck6wrackkfnwga";
+                    token = "--";
                     orgUrl = "https://dev.azure.com/flick2know";
                     return [4 /*yield*/, event_1.getEpics(orgUrl, token)];
                 case 1:

@@ -39,7 +39,7 @@ app.get('/generate', async (req: any, res: any) => {
     let iterationPaths: string[] = JSON.parse(req.query.iterationPaths);
 
     let orgUrl = `https://dev.azure.com/${ org }`;
-    const content = await genSprintNotes(orgUrl, token, iterationPaths);
+    const content = await genSprintNotes(orgUrl, token, iterationPaths,'Sprint 000');
 
     res.send(content);
   } catch (e) {

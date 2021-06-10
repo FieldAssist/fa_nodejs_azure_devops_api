@@ -17,11 +17,11 @@ export async function getWorkItem(workItemTrackingApi: WorkItemTrackingApi, id: 
   return await workItemTrackingApi.getWorkItem(id, undefined, undefined, WorkItemExpand.All);
 }
 
-export async function genSprintNotes(orgUrl: string, token: string, iterationPaths: string[]): Promise<string> {
+export async function genSprintNotes(orgUrl: string, token: string, iterationPaths: string[], sprintName: string): Promise<string> {
   try {
     let workItemTrackingApi: wi.WorkItemTrackingApi = await getWorkItemApi(orgUrl, token);
 
-    const query = `SELECT [System.Id], [System.Title], [System.State], [System.Description] FROM WorkItems WHERE [System.WorkItemType] = 'Product Backlog Item' AND [State] IN ('Committed','Testing','Ready for Demo','UAT','Done') AND [System.IterationPath] IN ('${ iterationPaths.join("','") }') ORDER BY [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc`;
+    const query = `SELECT [System.Id], [System.Title], [System.State], [System.Description] FROM WorkItems WHERE [System.WorkItemType] = 'Product Backlog Item' AND [State] IN ('Committed','Testing','Ready for Demo','UAT','Done') AND [System.IterationPath] IN ('${iterationPaths.join("','")}') ORDER BY [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc`;
     const backlogRefList = await workItemTrackingApi.queryByWiql({ query: query })
     const backlogIds = backlogRefList?.workItems?.map(value => value.id) ?? [];
 
@@ -32,7 +32,7 @@ export async function genSprintNotes(orgUrl: string, token: string, iterationPat
     backlogs = backlogs.sort((a, b) => (a.fields['System.Parent'] ?? 0) - (b.fields['System.Parent'] ?? 0));
 
     let contentList = [];
-    contentList.push("# 🔅 Sprint 000 (xy Apr - pq Apr '21)");
+    contentList.push(`# 🔅 ${sprintName ?? 'Sprint 000'} (xy Apr - pq Apr '21)`);
 
     for (const backlog of backlogs) {
       // @ts-ignore
@@ -68,24 +68,24 @@ export async function genSprintNotes(orgUrl: string, token: string, iterationPat
         }
       }
 
-      contentList.push(`## 📝 ${ title } ${ id }`);
+      contentList.push(`## 📝 ${title} ${id}`);
       const linkList = [];
       if (id)
-        linkList.push(`#### Backlog: [${ id }](${ url })  `);
+        linkList.push(`#### Backlog: [${id}](${url})  `);
       if (epicTitle)
-        linkList.push(`#### Epic: [${ epicTitle } ${ epicId }](${ epicUrl })`)
+        linkList.push(`#### Epic: [${epicTitle} ${epicId}](${epicUrl})`)
       if (featureTitle)
-        linkList.push(`#### Feature: [${ featureTitle } ${ featureId }](${ featureUrl })`);
+        linkList.push(`#### Feature: [${featureTitle} ${featureId}](${featureUrl})`);
       if (linkList.length > 0)
         contentList.push(linkList.join('\n'))
 
       if (description) {
         contentList.push(`#### Description`)
-        contentList.push(`${ description }`)
+        contentList.push(`${description}`)
       }
       if (acceptance) {
         contentList.push(`#### Acceptance Criteria`);
-        contentList.push(`${ acceptance }`);
+        contentList.push(`${acceptance}`);
       }
     }
     const content = contentList.join('\n\n');

@@ -1,4 +1,4 @@
-import { getWorkItem, getWorkItemApi, genSprintNotes } from "../event";
+import { genSprintNotes, getWorkItem, getWorkItemApi } from "../event";
 import { getEpicMarkdownBody } from "../test";
 import fs from "fs";
 import { handleGit } from "../git";
@@ -15,8 +15,8 @@ export const sprint = async (req: any, res: any) => {
 
     let iterationPaths: string[] = JSON.parse(req.query.iterationPaths);
 
-    let orgUrl = `https://dev.azure.com/${ org }`;
-    const content = await genSprintNotes(orgUrl, token, iterationPaths);
+    let orgUrl = `https://dev.azure.com/${org}`;
+    const content = await genSprintNotes(orgUrl, token, iterationPaths, "Sprint 000");
 
     res.send(content);
   } catch (e) {
@@ -44,7 +44,7 @@ export const epic = async (req: any, res: any) => {
 
     fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
 
-    const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${ epic.id }`;
+    const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${epic.id}`;
     await handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg);
 
     fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
