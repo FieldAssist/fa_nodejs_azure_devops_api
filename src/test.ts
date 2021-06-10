@@ -27,37 +27,37 @@ export function getWorkItemDetail(item: WorkItem): WorkItemDetail {
 
 function getEpicContent(epicDetail: WorkItemDetail): string {
   const contentList = [];
-  contentList.push(`# 👑 ${ epicDetail.title } ${ epicDetail.id }`);
+  contentList.push(`# 👑 ${epicDetail.title} ${epicDetail.id}`);
   contentList.push('::: toc Table of Contents\n' + '[[toc]]\n' + ':::')
-  contentList.push(`#### Epic: [${ epicDetail.id }](${ epicDetail.url })`);
+  contentList.push(`#### Epic: [${epicDetail.id}](${epicDetail.url})`);
 
   if (epicDetail.description) {
     contentList.push(`#### Description`);
-    contentList.push(`${ epicDetail.description }`);
+    contentList.push(`${epicDetail.description}`);
   }
   if (epicDetail.acceptance) {
     contentList.push(`#### Acceptance Criteria`);
-    contentList.push(`${ epicDetail.acceptance }`);
+    contentList.push(`${epicDetail.acceptance}`);
   }
   return contentList.join('\n\n');
 }
 
 async function getFeatureContent(id: number, workItemTrackingApi: WorkItemTrackingApi): Promise<string> {
-  console.log(`Generating Feature: ${ id }`);
+  console.log(`Generating Feature: ${id}`);
   const feature = await getWorkItem(workItemTrackingApi, id);
   const featureDetail = getWorkItemDetail(feature);
 
   const contentList = [];
-  contentList.push(`## ➡️ ${ featureDetail.title } ${ featureDetail.id }`);
-  contentList.push(`#### Feature: [${ featureDetail.id }](${ featureDetail.url })`);
+  contentList.push(`## ➡️ ${featureDetail.title} ${featureDetail.id}`);
+  contentList.push(`#### Feature: [${featureDetail.id}](${featureDetail.url})`);
 
   if (featureDetail.description) {
     contentList.push(`#### Description`);
-    contentList.push(`${ featureDetail.description }`);
+    contentList.push(`${featureDetail.description}`);
   }
   if (featureDetail.acceptance) {
     contentList.push(`#### Acceptance Criteria`);
-    contentList.push(`${ featureDetail.acceptance }`);
+    contentList.push(`${featureDetail.acceptance}`);
   }
 
   const relations = (feature.relations ?? []).filter(value => value.rel === "System.LinkTypes.Hierarchy-Forward");
@@ -67,7 +67,7 @@ async function getFeatureContent(id: number, workItemTrackingApi: WorkItemTracki
     const backlogId: string = ref.url?.split('/').reverse()[0] ?? "-1";
     await delay(delayTimeInMs);
     const backlogContent = await getBacklogContent(parseInt(backlogId), workItemTrackingApi);
-    backlogContentList.push(`::: backlogs Backlog \n${ backlogContent }\n:::`);
+    backlogContentList.push(`::: backlogs Backlog \n${backlogContent}\n:::`);
   }
 
   if (backlogContentList.length > 0) {
@@ -79,27 +79,27 @@ async function getFeatureContent(id: number, workItemTrackingApi: WorkItemTracki
 }
 
 async function getBacklogContent(id: number, workItemTrackingApi: WorkItemTrackingApi): Promise<string> {
-  console.log(`Generating Backlog: ${ id }`);
+  console.log(`Generating Backlog: ${id}`);
   const backlog = await getWorkItem(workItemTrackingApi, id);
   const detail = getWorkItemDetail(backlog);
 
   const contentList = [];
-  contentList.push(`### 📝 ${ detail.title } ${ detail.id }`);
-  contentList.push(`#### Backlog: [${ detail.id }](${ detail.url })`);
+  contentList.push(`### 📝 ${detail.title} ${detail.id}`);
+  contentList.push(`#### Backlog: [${detail.id}](${detail.url})`);
 
   if (detail.description) {
     contentList.push(`#### Description`);
-    contentList.push(`${ detail.description }`);
+    contentList.push(`${detail.description}`);
   }
   if (detail.acceptance) {
     contentList.push(`#### Acceptance Criteria`);
-    contentList.push(`${ detail.acceptance }`);
+    contentList.push(`${detail.acceptance}`);
   }
   return contentList.join('\n\n');
 }
 
 export async function getEpicMarkdownBody(epic: WorkItem, orgUrl: string, token: string): Promise<Epic> {
-  console.log(`Generating Epic: ${ epic.id }`);
+  console.log(`Generating Epic: ${epic.id}`);
   const contentList: string[] = [];
 
   const epicDetail = getWorkItemDetail(epic);
@@ -125,13 +125,13 @@ export async function getEpicMarkdownBody(epic: WorkItem, orgUrl: string, token:
 
 export async function runApp2() {
   try {
-    let token = "---";
+    let token = "--";
     let orgUrl = `https://dev.azure.com/flick2know`;
 
-    const epics = (await getEpics(orgUrl, token)).filter(value => value.id == 1112);
+    const epics = (await getEpics(orgUrl, token)).filter(value => value.id===35325)
     for (const epic of epics) {
       const epicDetail = await getEpicMarkdownBody(epic, orgUrl, token);
-      await fs.promises.writeFile(`../fa_vuepress_product_docs/docs/src/guide/epics/${ kebabCase(epicDetail.title) }.md`, epicDetail.content);
+      await fs.promises.writeFile(`../fa_vuepress_product_docs/docs/src/guide/epics/${kebabCase(epicDetail.title)}.md`, epicDetail.content);
     }
   } catch (e) {
     console.error(e);

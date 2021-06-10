@@ -80,11 +80,11 @@ export async function genSprintNotes(orgUrl: string, token: string, iterationPat
         contentList.push(linkList.join('\n'))
 
       if (description) {
-        contentList.push(`### Description`)
+        contentList.push(`#### Description`)
         contentList.push(`${ description }`)
       }
       if (acceptance) {
-        contentList.push(`### Acceptance Criteria`);
+        contentList.push(`#### Acceptance Criteria`);
         contentList.push(`${ acceptance }`);
       }
     }
@@ -101,7 +101,7 @@ export async function getEpics(orgUrl: string, token: string): Promise<WorkItem[
   try {
     let workItemTrackingApi: wi.WorkItemTrackingApi = await getWorkItemApi(orgUrl, token);
 
-    const query = `Select [System.Id], [System.Title], [System.State], [System.Description] From WorkItems Where [System.WorkItemType] = 'Epic' AND [System.TeamProject] = 'Field_Assist' order by [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc`;
+    const query = `Select [System.Id], [System.Title], [System.State], [System.Description] From WorkItems Where [System.WorkItemType] = 'Epic' AND [System.TeamProject] = 'Field_Assist' AND [State] NOT IN ('Removed') order by [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc`;
     const backlogRefList = await workItemTrackingApi.queryByWiql({ query: query })
     const backlogIds = backlogRefList?.workItems?.map(value => value.id) ?? [];
     // @ts-ignore

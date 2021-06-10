@@ -223,11 +223,11 @@ function runApp2() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 7, , 8]);
-                    token = "---";
+                    token = "j3x53hmkkwah4w6fyjwjsz6ytn6ensjaekbuq2ck6wrackkfnwga";
                     orgUrl = "https://dev.azure.com/flick2know";
                     return [4 /*yield*/, event_1.getEpics(orgUrl, token)];
                 case 1:
-                    epics = (_a.sent()).filter(function (value) { return value.id == 1112; });
+                    epics = (_a.sent()).filter(function (value) { return value.id === 35325; });
                     _i = 0, epics_1 = epics;
                     _a.label = 2;
                 case 2:

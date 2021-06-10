@@ -204,7 +204,7 @@ function getEpics(orgUrl, token) {
                     return [4 /*yield*/, getWorkItemApi(orgUrl, token)];
                 case 1:
                     workItemTrackingApi = _c.sent();
-                    query = "Select [System.Id], [System.Title], [System.State], [System.Description] From WorkItems Where [System.WorkItemType] = 'Epic' AND [System.TeamProject] = 'Field_Assist' order by [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc";
+                    query = "Select [System.Id], [System.Title], [System.State], [System.Description] From WorkItems Where [System.WorkItemType] = 'Epic' AND [System.TeamProject] = 'Field_Assist' AND [State] NOT IN ('Removed') order by [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc";
                     return [4 /*yield*/, workItemTrackingApi.queryByWiql({ query: query })];
                 case 2:
                     backlogRefList = _c.sent();
