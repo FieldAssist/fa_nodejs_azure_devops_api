@@ -19,12 +19,11 @@
   },
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "0.21.2",
     "azure-devops-node-api": "^10.2.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "helmet": "^4.4.1",
-    "marked": "^2.0.1",
     "nodegit": "^0.27.0"
   },
   "devDependencies": {
