@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -55,7 +55,7 @@ function runApp() {
                     endNumber = 117;
                     sprintIterationPaths = [];
                     for (i = startNumber; i <= endNumber; i++) {
-                        sprintIterationPaths.push("Field_Assist\\Release 11\\Sprint " + i);
+                        sprintIterationPaths.push("Field_Assist\\Release 11\\Sprint ".concat(i));
                     }
                     _i = 0, sprintIterationPaths_1 = sprintIterationPaths;
                     _a.label = 1;
@@ -63,13 +63,13 @@ function runApp() {
                     if (!(_i < sprintIterationPaths_1.length)) return [3 /*break*/, 5];
                     sprintPath = sprintIterationPaths_1[_i];
                     sprintName = sprintPath.split('\\')[2];
-                    sprintFileName = utils_1.kebabCase(sprintName) + ".md";
+                    sprintFileName = "".concat((0, utils_1.kebabCase)(sprintName), ".md");
                     console.log(sprintName);
-                    orgUrl = "https://dev.azure.com/" + org;
-                    return [4 /*yield*/, event_1.genSprintNotes(orgUrl, token, [sprintPath], sprintName)];
+                    orgUrl = "https://dev.azure.com/".concat(org);
+                    return [4 /*yield*/, (0, event_1.genSprintNotes)(orgUrl, token, [sprintPath], sprintName)];
                 case 2:
                     content = _a.sent();
-                    return [4 /*yield*/, fs_1.default.promises.writeFile("../fa_vuepress_product_docs/docs/src/guide/sprints/" + sprintFileName, content)];
+                    return [4 /*yield*/, fs_1.default.promises.writeFile("../fa_vuepress_product_docs/docs/src/guide/sprints/".concat(sprintFileName), content)];
                 case 3:
                     _a.sent();
                     _a.label = 4;

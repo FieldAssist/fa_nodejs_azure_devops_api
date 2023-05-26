@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -33,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -68,12 +72,12 @@ var v1_router_1 = require("./v1.router");
 var helmet_1 = __importDefault(require("helmet"));
 var appError_1 = require("./utils/appError");
 var error_controller_1 = require("./controllers/error.controller");
-var app = express_1.default();
+var app = (0, express_1.default)();
 var port = (_a = process.env.PORT) !== null && _a !== void 0 ? _a : 3000;
 // Allow Cross-Origin requests
-app.use(cors_1.default());
+app.use((0, cors_1.default)());
 // Set security HTTP headers
-app.use(helmet_1.default());
+app.use((0, helmet_1.default)());
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use(body_parser_1.default.json());
 app.use('/v1', v1_router_1.v1router);
@@ -94,8 +98,8 @@ app.get('/generate', function (req, res) { return __awaiter(void 0, void 0, void
                     return [2 /*return*/];
                 }
                 iterationPaths = JSON.parse(req.query.iterationPaths);
-                orgUrl = "https://dev.azure.com/" + org;
-                return [4 /*yield*/, event_1.genSprintNotes(orgUrl, token, iterationPaths, 'Sprint 000')];
+                orgUrl = "https://dev.azure.com/".concat(org);
+                return [4 /*yield*/, (0, event_1.genSprintNotes)(orgUrl, token, iterationPaths, 'Sprint 000')];
             case 1:
                 content = _a.sent();
                 res.send(content);
@@ -132,6 +136,6 @@ app.use('*', function (req, res, next) {
 });
 app.use(error_controller_1.globalError);
 app.listen(port, function () {
-    console.log("App listening at http://localhost:" + port);
+    console.log("App listening at http://localhost:".concat(port));
 });
 //# sourceMappingURL=index.js.map

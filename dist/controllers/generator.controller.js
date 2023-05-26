@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -35,15 +35,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.epic = exports.sprint = void 0;
+exports.sprint = void 0;
 var event_1 = require("../event");
-var test_1 = require("../test");
-var fs_1 = __importDefault(require("fs"));
-var git_1 = require("../git");
+// import { handleGit } from "../git";
 var sprint = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var org, token, iterationPaths, orgUrl, content, e_1;
     return __generator(this, function (_a) {
@@ -57,8 +52,8 @@ var sprint = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                     return [2 /*return*/];
                 }
                 iterationPaths = JSON.parse(req.query.iterationPaths);
-                orgUrl = "https://dev.azure.com/" + org;
-                return [4 /*yield*/, event_1.genSprintNotes(orgUrl, token, iterationPaths, "Sprint 000")];
+                orgUrl = "https://dev.azure.com/".concat(org);
+                return [4 /*yield*/, (0, event_1.genSprintNotes)(orgUrl, token, iterationPaths, "Sprint 000")];
             case 1:
                 content = _a.sent();
                 res.send(content);
@@ -73,46 +68,34 @@ var sprint = function (req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 exports.sprint = sprint;
-var epic = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orgUrl, azToken, ghToken, epicId, workItemTrackingApi, epic_1, epicMarkdown, commitMsg, e_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                orgUrl = "https://dev.azure.com/flick2know";
-                azToken = req.query.azToken;
-                ghToken = req.query.ghToken;
-                epicId = req.query.epicId;
-                if (!ghToken || !epicId || !azToken) {
-                    res.status(400).send('ghToken, epicId, azToken cannot be null/empty!');
-                    return [2 /*return*/];
-                }
-                return [4 /*yield*/, event_1.getWorkItemApi(orgUrl, azToken)];
-            case 1:
-                workItemTrackingApi = _a.sent();
-                return [4 /*yield*/, event_1.getWorkItem(workItemTrackingApi, parseInt(epicId))];
-            case 2:
-                epic_1 = _a.sent();
-                return [4 /*yield*/, test_1.getEpicMarkdownBody(epic_1, orgUrl, azToken)];
-            case 3:
-                epicMarkdown = _a.sent();
-                console.log('Generated markdown content successfully!');
-                fs_1.default.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
-                commitMsg = "Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic " + epic_1.id;
-                return [4 /*yield*/, git_1.handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg)];
-            case 4:
-                _a.sent();
-                fs_1.default.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
-                res.send('Successfully pushed changes.');
-                return [3 /*break*/, 6];
-            case 5:
-                e_2 = _a.sent();
-                console.error(e_2);
-                res.status(500).send(e_2 === null || e_2 === void 0 ? void 0 : e_2.toString());
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
-        }
-    });
-}); };
-exports.epic = epic;
+// export const epic = async (req: any, res: any) => {
+//   try {
+//     const orgUrl = "https://dev.azure.com/flick2know";
+//     const azToken = req.query.azToken;
+//     const ghToken = req.query.ghToken;
+//     const epicId = req.query.epicId;
+//
+//     if (!ghToken || !epicId || !azToken) {
+//       res.status(400).send('ghToken, epicId, azToken cannot be null/empty!');
+//       return;
+//     }
+//     let workItemTrackingApi = await getWorkItemApi(orgUrl, azToken);
+//
+//     const epic = await getWorkItem(workItemTrackingApi, parseInt(epicId));
+//     const epicMarkdown = await getEpicMarkdownBody(epic, orgUrl, azToken);
+//     console.log('Generated markdown content successfully!');
+//
+//     fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
+//
+//     const commitMsg = `Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ${epic.id}`;
+//     await handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg);
+//
+//     fs.rmdirSync("./fa_vuepress_product_docs", { recursive: true });
+//
+//     res.send('Successfully pushed changes.');
+//   } catch (e) {
+//     console.error(e);
+//     res.status(500).send(e?.toString());
+//   }
+// }
 //# sourceMappingURL=generator.controller.js.map

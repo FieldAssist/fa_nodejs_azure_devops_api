@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -33,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -54,10 +58,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getEpics = exports.genSprintNotes = exports.getWorkItem = exports.getWorkItems = exports.getWorkItemApi = void 0;
@@ -82,7 +90,7 @@ function getWorkItems(workItemTrackingApi, ids) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, workItemTrackingApi.getWorkItems(__spreadArray([], ids), undefined, undefined, WorkItemTrackingInterfaces_1.WorkItemExpand.All)];
+                case 0: return [4 /*yield*/, workItemTrackingApi.getWorkItems(__spreadArray([], ids, true), undefined, undefined, WorkItemTrackingInterfaces_1.WorkItemExpand.All)];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });
@@ -111,7 +119,7 @@ function genSprintNotes(orgUrl, token, iterationPaths, sprintName) {
                     return [4 /*yield*/, getWorkItemApi(orgUrl, token)];
                 case 1:
                     workItemTrackingApi = _c.sent();
-                    query = "SELECT [System.Id], [System.Title], [System.State], [System.Description] FROM WorkItems WHERE [System.WorkItemType] = 'Product Backlog Item' AND [State] IN ('Committed','Testing','Ready for Demo','UAT','Done') AND [System.IterationPath] IN ('" + iterationPaths.join("','") + "') ORDER BY [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc";
+                    query = "SELECT [System.Id], [System.Title], [System.State], [System.Description] FROM WorkItems WHERE [System.WorkItemType] = 'Product Backlog Item' AND [State] IN ('Committed','Testing','Ready for Demo','UAT','Done') AND [System.IterationPath] IN ('".concat(iterationPaths.join("','"), "') ORDER BY [Microsoft.VSTS.Common.Priority] asc, [System.CreatedDate] desc");
                     return [4 /*yield*/, workItemTrackingApi.queryByWiql({ query: query })];
                 case 2:
                     backlogRefList = _c.sent();
@@ -122,7 +130,7 @@ function genSprintNotes(orgUrl, token, iterationPaths, sprintName) {
                     // @ts-ignore
                     backlogs = backlogs.sort(function (a, b) { var _a, _b; return ((_a = a.fields['System.Parent']) !== null && _a !== void 0 ? _a : 0) - ((_b = b.fields['System.Parent']) !== null && _b !== void 0 ? _b : 0); });
                     contentList = [];
-                    contentList.push("# \uD83D\uDD05 " + (sprintName !== null && sprintName !== void 0 ? sprintName : 'Sprint 000') + " (xy Apr - pq Apr '21)");
+                    contentList.push("# \uD83D\uDD05 ".concat(sprintName !== null && sprintName !== void 0 ? sprintName : 'Sprint 000', " (xy Apr - pq Apr '21)"));
                     _i = 0, backlogs_1 = backlogs;
                     _c.label = 4;
                 case 4:
@@ -157,23 +165,23 @@ function genSprintNotes(orgUrl, token, iterationPaths, sprintName) {
                     epicUrl = epic._links.html.href;
                     _c.label = 7;
                 case 7:
-                    contentList.push("## \uD83D\uDCDD " + title + " " + id);
+                    contentList.push("## \uD83D\uDCDD ".concat(title, " ").concat(id));
                     linkList = [];
                     if (id)
-                        linkList.push("#### Backlog: [" + id + "](" + url + ")  ");
+                        linkList.push("#### Backlog: [".concat(id, "](").concat(url, ")  "));
                     if (epicTitle)
-                        linkList.push("#### Epic: [" + epicTitle + " " + epicId + "](" + epicUrl + ")");
+                        linkList.push("#### Epic: [".concat(epicTitle, " ").concat(epicId, "](").concat(epicUrl, ")"));
                     if (featureTitle)
-                        linkList.push("#### Feature: [" + featureTitle + " " + featureId + "](" + featureUrl + ")");
+                        linkList.push("#### Feature: [".concat(featureTitle, " ").concat(featureId, "](").concat(featureUrl, ")"));
                     if (linkList.length > 0)
                         contentList.push(linkList.join('\n'));
                     if (description) {
                         contentList.push("#### Description");
-                        contentList.push("" + description);
+                        contentList.push("".concat(description));
                     }
                     if (acceptance) {
                         contentList.push("#### Acceptance Criteria");
-                        contentList.push("" + acceptance);
+                        contentList.push("".concat(acceptance));
                     }
                     _c.label = 8;
                 case 8:

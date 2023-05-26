@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -33,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -81,16 +85,16 @@ function getWorkItemDetail(item) {
 exports.getWorkItemDetail = getWorkItemDetail;
 function getEpicContent(epicDetail) {
     var contentList = [];
-    contentList.push("# \uD83D\uDC51 " + epicDetail.title + " " + epicDetail.id);
+    contentList.push("# \uD83D\uDC51 ".concat(epicDetail.title, " ").concat(epicDetail.id));
     contentList.push('::: toc Table of Contents\n' + '[[toc]]\n' + ':::');
-    contentList.push("#### Epic: [" + epicDetail.id + "](" + epicDetail.url + ")");
+    contentList.push("#### Epic: [".concat(epicDetail.id, "](").concat(epicDetail.url, ")"));
     if (epicDetail.description) {
         contentList.push("#### Description");
-        contentList.push("" + epicDetail.description);
+        contentList.push("".concat(epicDetail.description));
     }
     if (epicDetail.acceptance) {
         contentList.push("#### Acceptance Criteria");
-        contentList.push("" + epicDetail.acceptance);
+        contentList.push("".concat(epicDetail.acceptance));
     }
     return contentList.join('\n\n');
 }
@@ -101,21 +105,21 @@ function getFeatureContent(id, workItemTrackingApi) {
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
-                    console.log("Generating Feature: " + id);
-                    return [4 /*yield*/, event_1.getWorkItem(workItemTrackingApi, id)];
+                    console.log("Generating Feature: ".concat(id));
+                    return [4 /*yield*/, (0, event_1.getWorkItem)(workItemTrackingApi, id)];
                 case 1:
                     feature = _d.sent();
                     featureDetail = getWorkItemDetail(feature);
                     contentList = [];
-                    contentList.push("## \u27A1\uFE0F " + featureDetail.title + " " + featureDetail.id);
-                    contentList.push("#### Feature: [" + featureDetail.id + "](" + featureDetail.url + ")");
+                    contentList.push("## \u27A1\uFE0F ".concat(featureDetail.title, " ").concat(featureDetail.id));
+                    contentList.push("#### Feature: [".concat(featureDetail.id, "](").concat(featureDetail.url, ")"));
                     if (featureDetail.description) {
                         contentList.push("#### Description");
-                        contentList.push("" + featureDetail.description);
+                        contentList.push("".concat(featureDetail.description));
                     }
                     if (featureDetail.acceptance) {
                         contentList.push("#### Acceptance Criteria");
-                        contentList.push("" + featureDetail.acceptance);
+                        contentList.push("".concat(featureDetail.acceptance));
                     }
                     relations = ((_a = feature.relations) !== null && _a !== void 0 ? _a : []).filter(function (value) { return value.rel === "System.LinkTypes.Hierarchy-Forward"; });
                     backlogContentList = [];
@@ -131,7 +135,7 @@ function getFeatureContent(id, workItemTrackingApi) {
                     return [4 /*yield*/, getBacklogContent(parseInt(backlogId), workItemTrackingApi)];
                 case 4:
                     backlogContent = _d.sent();
-                    backlogContentList.push("::: backlogs Backlog \n" + backlogContent + "\n:::");
+                    backlogContentList.push("::: backlogs Backlog \n".concat(backlogContent, "\n:::"));
                     _d.label = 5;
                 case 5:
                     _i++;
@@ -151,21 +155,21 @@ function getBacklogContent(id, workItemTrackingApi) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    console.log("Generating Backlog: " + id);
-                    return [4 /*yield*/, event_1.getWorkItem(workItemTrackingApi, id)];
+                    console.log("Generating Backlog: ".concat(id));
+                    return [4 /*yield*/, (0, event_1.getWorkItem)(workItemTrackingApi, id)];
                 case 1:
                     backlog = _a.sent();
                     detail = getWorkItemDetail(backlog);
                     contentList = [];
-                    contentList.push("### \uD83D\uDCDD " + detail.title + " " + detail.id);
-                    contentList.push("#### Backlog: [" + detail.id + "](" + detail.url + ")");
+                    contentList.push("### \uD83D\uDCDD ".concat(detail.title, " ").concat(detail.id));
+                    contentList.push("#### Backlog: [".concat(detail.id, "](").concat(detail.url, ")"));
                     if (detail.description) {
                         contentList.push("#### Description");
-                        contentList.push("" + detail.description);
+                        contentList.push("".concat(detail.description));
                     }
                     if (detail.acceptance) {
                         contentList.push("#### Acceptance Criteria");
-                        contentList.push("" + detail.acceptance);
+                        contentList.push("".concat(detail.acceptance));
                     }
                     return [2 /*return*/, contentList.join('\n\n')];
             }
@@ -179,7 +183,7 @@ function getEpicMarkdownBody(epic, orgUrl, token) {
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
-                    console.log("Generating Epic: " + epic.id);
+                    console.log("Generating Epic: ".concat(epic.id));
                     contentList = [];
                     epicDetail = getWorkItemDetail(epic);
                     epicContent = getEpicContent(epicDetail);
@@ -194,7 +198,7 @@ function getEpicMarkdownBody(epic, orgUrl, token) {
                     return [4 /*yield*/, delay(delayTimeInMs)];
                 case 2:
                     _e.sent();
-                    return [4 /*yield*/, event_1.getWorkItemApi(orgUrl, token)];
+                    return [4 /*yield*/, (0, event_1.getWorkItemApi)(orgUrl, token)];
                 case 3:
                     workItemTrackingApi = _e.sent();
                     return [4 /*yield*/, getFeatureContent(parseInt(featureId), workItemTrackingApi)];
@@ -225,7 +229,7 @@ function runApp2() {
                     _a.trys.push([0, 7, , 8]);
                     token = "--";
                     orgUrl = "https://dev.azure.com/flick2know";
-                    return [4 /*yield*/, event_1.getEpics(orgUrl, token)];
+                    return [4 /*yield*/, (0, event_1.getEpics)(orgUrl, token)];
                 case 1:
                     epics = (_a.sent()).filter(function (value) { return value.id === 35325; });
                     _i = 0, epics_1 = epics;
@@ -236,7 +240,7 @@ function runApp2() {
                     return [4 /*yield*/, getEpicMarkdownBody(epic, orgUrl, token)];
                 case 3:
                     epicDetail = _a.sent();
-                    return [4 /*yield*/, fs.promises.writeFile("../fa_vuepress_product_docs/docs/src/guide/epics/" + utils_1.kebabCase(epicDetail.title) + ".md", epicDetail.content)];
+                    return [4 /*yield*/, fs.promises.writeFile("../fa_vuepress_product_docs/docs/src/guide/epics/".concat((0, utils_1.kebabCase)(epicDetail.title), ".md"), epicDetail.content)];
                 case 4:
                     _a.sent();
                     _a.label = 5;

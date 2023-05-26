@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -51,18 +51,18 @@ function runEpicPublish(azToken, ghToken, epicId) {
                     if (!ghToken || !epicId || !azToken) {
                         throw 'ghToken, epicId, azToken cannot be null/empty!';
                     }
-                    return [4 /*yield*/, event_1.getWorkItemApi(orgUrl, azToken)];
+                    return [4 /*yield*/, (0, event_1.getWorkItemApi)(orgUrl, azToken)];
                 case 1:
                     workItemTrackingApi = _a.sent();
-                    return [4 /*yield*/, event_1.getWorkItem(workItemTrackingApi, parseInt(epicId))];
+                    return [4 /*yield*/, (0, event_1.getWorkItem)(workItemTrackingApi, parseInt(epicId))];
                 case 2:
                     epic = _a.sent();
-                    return [4 /*yield*/, test_1.getEpicMarkdownBody(epic, orgUrl, azToken)];
+                    return [4 /*yield*/, (0, test_1.getEpicMarkdownBody)(epic, orgUrl, azToken)];
                 case 3:
                     epicMarkdown = _a.sent();
                     console.log('Generated markdown content successfully!');
-                    commitMsg = "Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic " + epic.id;
-                    return [4 /*yield*/, git_1.handleGit(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg)];
+                    commitMsg = "Update from FieldAssist/fa_vuejs_azure_api_dashboard for Epic ".concat(epic.id);
+                    return [4 /*yield*/, (0, git_1.handleGit)(ghToken, epicMarkdown.title, epicMarkdown.content, commitMsg)];
                 case 4:
                     _a.sent();
                     return [2 /*return*/, 'Successfully pushed changes.'];
