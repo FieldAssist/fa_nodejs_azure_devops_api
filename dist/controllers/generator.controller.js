@@ -58,7 +58,7 @@ var sprint = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 }
                 iterationPaths = JSON.parse(req.query.iterationPaths);
                 orgUrl = "https://dev.azure.com/" + org;
-                return [4 /*yield*/, event_1.genSprintNotes(orgUrl, token, iterationPaths)];
+                return [4 /*yield*/, event_1.genSprintNotes(orgUrl, token, iterationPaths, "Sprint 000")];
             case 1:
                 content = _a.sent();
                 res.send(content);
